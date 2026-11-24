@@ -1,0 +1,476 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<title>Evidencias Q3 Memo</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600;700&display=swap">
+<style>
+/* Layout: expediente de una sola columna; resumen de las 3 metas arriba, luego una sección por meta con números, gráficas, evidencia y carga de archivos. */
+:root{
+  --bg:#f5f6f8; --surface:#ffffff; --fg:#161b26; --muted:#5b6475; --line:#dde1e8;
+  --accent:#2446c7; --accent-soft:#e6ebfb;
+  --inc:#c2461f; --req:#3a6ea5; --inc-soft:#f6e2da; --req-soft:#dde8f4;
+  --ok:#1f7a4d; --ok-soft:#dcefe4; --warn:#a46200; --warn-soft:#f6ead4; --bad:#b3261e;
+  --font-display:"IBM Plex Sans Condensed","Arial Narrow",system-ui,sans-serif;
+  --font-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --font-mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#10131a; --surface:#181c26; --fg:#e7eaf0; --muted:#9aa3b5; --line:#2a3040;
+  --accent:#8aa2ff; --accent-soft:#222c4d;
+  --inc:#f08a63; --req:#7fb0e6; --inc-soft:#3a2219; --req-soft:#1c2c40;
+  --ok:#5fd19a; --ok-soft:#163327; --warn:#f0b354; --warn-soft:#3a2b12; --bad:#ff8a80;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#10131a; --surface:#181c26; --fg:#e7eaf0; --muted:#9aa3b5; --line:#2a3040;
+  --accent:#8aa2ff; --accent-soft:#222c4d;
+  --inc:#f08a63; --req:#7fb0e6; --inc-soft:#3a2219; --req-soft:#1c2c40;
+  --ok:#5fd19a; --ok-soft:#163327; --warn:#f0b354; --warn-soft:#3a2b12; --bad:#ff8a80;
+  color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--font-body);font-size:15px;line-height:1.55}
+.wrap{max-width:1040px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:32px 64px;display:grid;gap:40px}
+h1,h2,h3{font-family:var(--font-display);text-wrap:balance;margin:0;line-height:1.15}
+h1{font-size:clamp(28px,5vw,40px);font-weight:700;letter-spacing:-.01em}
+h2{font-size:26px;font-weight:600}
+h3{font-size:17px;font-weight:600}
+p{margin:0;max-width:68ch}
+a{color:var(--accent)}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.eyebrow{font-family:var(--font-mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.mono{font-family:var(--font-mono)}
+.num{font-variant-numeric:tabular-nums}
+header.top{display:grid;gap:12px}
+header.top .meta{display:flex;flex-wrap:wrap;gap:8px 20px;color:var(--muted);font-size:13px}
+
+/* Resumen */
+.summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+@media (max-width:760px){.summary{grid-template-columns:1fr}}
+.goal{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;display:grid;gap:10px;text-decoration:none;color:inherit;min-width:0}
+.goal:hover{border-color:var(--accent)}
+.goal .row{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.goal .score{font-family:var(--font-display);font-size:44px;font-weight:700;line-height:1}
+.goal .score small{font-size:18px;color:var(--muted);font-weight:500}
+.scale{position:relative;height:8px;border-radius:4px;background:linear-gradient(90deg,var(--line) 0 50%,var(--warn-soft) 50% 66.67%,var(--ok-soft) 66.67% 83.33%,var(--accent-soft) 83.33% 100%)}
+.scale i{position:absolute;top:-4px;width:3px;height:16px;border-radius:2px;background:var(--fg)}
+.scale-labels{display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:10.5px;color:var(--muted)}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:3px 9px;border-radius:999px;white-space:nowrap}
+.pill.ok{background:var(--ok-soft);color:var(--ok)}
+.pill.warn{background:var(--warn-soft);color:var(--warn)}
+
+/* Secciones */
+section.meta-sec{display:grid;gap:20px;scroll-margin-top:16px}
+.sec-head{display:grid;gap:8px;border-top:2px solid var(--fg);padding-top:16px}
+.sec-head .line{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 16px}
+.target{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}
+@media (max-width:760px){.target{grid-template-columns:1fr}}
+.box{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:grid;gap:6px;min-width:0}
+.box.leader{border-left:3px solid var(--warn)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.kpi{display:grid;gap:2px;padding:12px 0;border-top:1px solid var(--line)}
+.kpi b{font-family:var(--font-display);font-size:30px;font-weight:700;line-height:1.1}
+.kpi span{font-size:13px;color:var(--muted)}
+.kpi b.down{color:var(--ok)} .kpi b.up{color:var(--req)}
+.chart{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;display:grid;gap:10px;min-width:0}
+.chart svg{width:100%;height:auto;display:block}
+.chart .legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12.5px;color:var(--muted)}
+.chart .legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+.chart .src{font-size:12px;color:var(--muted)}
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}
+@media (max-width:760px){.two{grid-template-columns:1fr}}
+.tbl{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--font-mono);font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);font-weight:500}
+tr:last-child td{border-bottom:0}
+.sev{font-family:var(--font-mono);font-size:11.5px;font-weight:500;padding:2px 6px;border-radius:4px;background:var(--inc-soft);color:var(--inc)}
+.sev.p2{background:var(--line);color:var(--muted)}
+.timeline{list-style:none;margin:0;padding:0;display:grid;gap:0}
+.timeline li{display:grid;grid-template-columns:76px minmax(0,1fr);gap:12px;padding:10px 0;border-top:1px solid var(--line)}
+.timeline li:first-child{border-top:0}
+.timeline time{font-family:var(--font-mono);font-size:12.5px;color:var(--muted);padding-top:1px}
+.timeline .tag{font-size:11px;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:.04em;margin-right:6px}
+.note{font-size:13px;color:var(--muted)}
+
+/* Evidencias cargadas */
+.evid{display:grid;gap:12px}
+.evid-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px}
+.evid-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+.ev{background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow:hidden;display:grid;min-width:0}
+.ev .thumb{aspect-ratio:16/9;max-width:100%;background:var(--bg);display:grid;place-items:center;color:var(--muted);font-family:var(--font-mono);font-size:12px;overflow:hidden}
+.ev .thumb img{width:100%;height:100%;object-fit:cover}
+.ev .body{padding:10px 12px;display:grid;gap:4px}
+.ev .body b{font-size:14px;overflow-wrap:anywhere}
+.ev .body p{font-size:12.5px;color:var(--muted);overflow-wrap:anywhere}
+.ev .acts{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:12px}
+.empty{border:1px dashed var(--line);border-radius:10px;padding:16px;color:var(--muted);font-size:13.5px}
+form.up{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:grid;gap:10px}
+form.up .grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
+@media (max-width:640px){form.up .grid{grid-template-columns:1fr}}
+label{display:grid;gap:4px;font-size:12.5px;color:var(--muted)}
+input[type=text],input[type=url],textarea{font:inherit;font-size:14px;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:8px 10px;width:100%}
+input[type=file]{font-size:13px;color:var(--muted);max-width:100%}
+textarea{min-height:56px;resize:vertical}
+button{font:inherit;font-size:13.5px;font-weight:600;border-radius:6px;border:1px solid var(--accent);background:var(--accent);color:var(--surface);padding:8px 14px;cursor:pointer}
+button.ghost{background:transparent;color:var(--muted);border-color:var(--line);font-weight:500;padding:4px 8px;font-size:12px}
+button[disabled]{opacity:.6;cursor:default}
+.status{font-size:12.5px;color:var(--muted)}
+.status.err{color:var(--bad)}
+footer{font-size:12.5px;color:var(--muted);border-top:1px solid var(--line);padding-top:16px;display:grid;gap:6px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <span class="eyebrow">1:1 P&amp;T · Cierre Q3 2026 · Mesa de Servicio</span>
+    <h1>Evidencias de resultados Q3</h1>
+    <p>Lo logrado en las tres metas de Q3, con los números y la fuente de cada uno. Cada sección responde al comentario del líder en la columna O de la hoja Memo.</p>
+    <div class="meta"><span>Guillermo Villanueva (Memo)</span><span>Periodo: 1-jul al 30-sep-2026</span><span class="mono">Pesos 40 / 35 / 25</span></div>
+  </header>
+
+  <div class="summary" aria-label="Resumen de las metas">
+    <a class="goal" href="#meta-5">
+      <div class="row"><span class="eyebrow">Fila 5 · Indicador · 40</span><span class="pill ok">Cumple</span></div>
+      <h3>Resolver causas recurrentes con los streams</h3>
+      <div class="score num">100<small>%</small></div>
+      <div class="scale"><i style="left:calc(83.33% - 1.5px)"></i></div>
+      <div class="scale-labels"><span>0</span><span>60</span><span>80</span><span>100</span><span>120</span></div>
+    </a>
+    <a class="goal" href="#meta-6">
+      <div class="row"><span class="eyebrow">Fila 6 · Indicador · 35</span><span class="pill warn">Cumple parcial</span></div>
+      <h3>Reducir escapes operativos con Quality</h3>
+      <div class="score num">80<small>%</small></div>
+      <div class="scale"><i style="left:calc(66.67% - 1.5px)"></i></div>
+      <div class="scale-labels"><span>0</span><span>60</span><span>80</span><span>100</span><span>120</span></div>
+    </a>
+    <a class="goal" href="#meta-7">
+      <div class="row"><span class="eyebrow">Fila 7 · Proyecto · 25</span><span class="pill ok">Cumple</span></div>
+      <h3>Central y autoservicio</h3>
+      <div class="score num">85<small>%</small></div>
+      <div class="scale"><i style="left:calc(70.83% - 1.5px)"></i></div>
+      <div class="scale-labels"><span>0</span><span>60</span><span>80</span><span>100</span><span>120</span></div>
+    </a>
+  </div>
+
+  <!-- ===================== META 5 ===================== -->
+  <section class="meta-sec" id="meta-5">
+    <div class="sec-head">
+      <span class="eyebrow">Fila 5 · Indicador · Peso 40</span>
+      <div class="line"><h2>Resolver causas recurrentes con los streams</h2><span class="pill ok">N = 100</span></div>
+    </div>
+    <div class="target">
+      <div class="box"><span class="eyebrow">Objetivo (columna F)</span><p>100% con RCA/owner; ≥30% menos recurrencia.</p></div>
+      <div class="box leader"><span class="eyebrow">Comentario del líder (columna O)</span><p>Incidentes 779→653 agosto a septiembre (−16%). No prueba reducción de las causas seleccionadas.</p></div>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><b class="num">2 / 2</b><span>P1 de Q3 con ticket y RCA (100%)</span></div>
+      <div class="kpi"><b class="num down">5 → 0</b><span>Cédulas de Odoo, julio vs septiembre</span></div>
+      <div class="kpi"><b class="num down">2 → 0</b><span>P1, julio vs agosto y septiembre</span></div>
+      <div class="kpi"><b class="num down">−16%</b><span>Incidentes totales, ago → sep (779 → 653)</span></div>
+    </div>
+    <div class="two">
+      <div class="chart">
+        <h3>Cédulas de incidente de Odoo por mes</h3>
+        <div id="c5"></div>
+        <div class="legend"><span><i style="background:var(--inc)"></i>P1</span><span><i style="background:var(--muted)"></i>P2</span></div>
+        <span class="src">Fuente: cédulas publicadas en #hypercare_tech_galileo, 1-jul al 30-sep.</span>
+      </div>
+      <div class="chart">
+        <h3>Causa raíz eliminada: jobs atorados (PgDog)</h3>
+        <ul class="timeline">
+          <li><time>30-ago</time><div>Citas sin reflejarse en más de 15 templos. Causa: el timeout de PgDog (60 s) chocaba con el del jobrunner de Odoo (60 s).</div></li>
+          <li><time>31-ago</time><div><span class="tag">Fix</span>gitops#35 en producción: timeout a 180 s, ADR y CI guard que impide bajarlo.</div></li>
+          <li><time>01-sep</time><div><span class="tag">Detección</span>Alertas odo10 (desconexión) y odo11 (recuperación agotada) en vivo.</div></li>
+          <li><time>sep</time><div>Sin cédulas de Odoo en septiembre.</div></li>
+        </ul>
+      </div>
+    </div>
+    <div class="tbl">
+      <table>
+        <thead><tr><th>Fecha</th><th>Sev.</th><th>Incidente</th><th>Duración</th><th>Ticket</th><th>RCA</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">01-jul</td><td><span class="sev p2">P2</span></td><td>Lentitud en Lab y Backoffice (CO/MX)</td><td class="num">17 min</td><td><a href="https://app.clickup.com/t/14177510/86e23yzg0" target="_blank" rel="noopener">86e23yzg0</a></td><td><a href="https://docs.google.com/document/d/1uaOshiXyEVY-i4uBAkZrhBAU-B41qyTe/edit" target="_blank" rel="noopener">RCA</a></td></tr>
+          <tr><td class="mono">02-jul</td><td><span class="sev">P1</span></td><td>Odoo sin servicio (CO/MX/CL)</td><td class="num">14 min</td><td><a href="https://app.clickup.com/t/86e24kbvg" target="_blank" rel="noopener">86e24kbvg</a></td><td><a href="https://docs.google.com/document/d/1uaOshiXyEVY-i4uBAkZrhBAU-B41qyTe/edit" target="_blank" rel="noopener">RCA</a></td></tr>
+          <tr><td class="mono">14-jul</td><td><span class="sev p2">P2</span></td><td>Lentitud en Lab y Backoffice (CO/CL/MX)</td><td class="num">13 min</td><td><a href="https://app.clickup.com/t/14177510/86e2b6e1r" target="_blank" rel="noopener">86e2b6e1r</a></td><td><a href="https://docs.google.com/document/d/1CyPPbtBldUd0taO_fhIVm5zzH0ZkwBfz/edit" target="_blank" rel="noopener">RCA</a></td></tr>
+          <tr><td class="mono">20-jul</td><td><span class="sev">P1</span></td><td>Odoo sin servicio (el título de la cédula dice P2)</td><td class="num">67 min</td><td><a href="https://app.clickup.com/t/14177510/86e2e35xe" target="_blank" rel="noopener">86e2e35xe</a></td><td><a href="https://docs.google.com/document/d/18W8t7UqidBj5C4xi5PFKC9j3VFepUZ5O/edit" target="_blank" rel="noopener">RCA</a></td></tr>
+          <tr><td class="mono">27-jul</td><td><span class="sev p2">P2</span></td><td>Intermitencia en Odoo (12 min sin servicio)</td><td class="num">40 min</td><td><a href="https://app.clickup.com/t/14177510/86e2h2mwy" target="_blank" rel="noopener">86e2h2mwy</a></td><td><a href="https://docs.google.com/document/d/19gUgsn4dPPAsB1xjhLHYuoXwfJ0hyNBq/edit" target="_blank" rel="noopener">RCA</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="evid" data-meta="5"></div>
+  </section>
+
+  <!-- ===================== META 6 ===================== -->
+  <section class="meta-sec" id="meta-6">
+    <div class="sec-head">
+      <span class="eyebrow">Fila 6 · Indicador · Peso 35</span>
+      <div class="line"><h2>Reducir escapes operativos con Quality</h2><span class="pill warn">N = 80</span></div>
+    </div>
+    <div class="target">
+      <div class="box"><span class="eyebrow">Objetivo (columna F)</span><p>Baseline conjunto y reducción verificable.</p></div>
+      <div class="box leader"><span class="eyebrow">Comentario del líder (columna O)</span><p>Dos slides reportan 91 y 59 escalaciones de sep. Conciliar población; ruteo ≠ prevención.</p></div>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><b class="num down">−30%</b><span>Incidentes, jul → sep (1,393 → 982)</span></div>
+      <div class="kpi"><b class="num up">+77%</b><span>Requerimientos, jul → sep (878 → 1,553)</span></div>
+      <div class="kpi"><b class="num">+12%</b><span>Total de tickets, jul → sep (2,310 → 2,590)</span></div>
+      <div class="kpi"><b class="num down">7.90% → 2.63%</b><span>Tickets escalados / total, jun → sep</span></div>
+    </div>
+    <div class="chart">
+      <h3>Más tickets, menos incidentes</h3>
+      <div id="c6m"></div>
+      <div class="legend"><span><i style="background:var(--inc)"></i>Incidentes</span><span><i style="background:var(--req)"></i>Requerimientos</span></div>
+      <span class="src">Fuente: Sheet «Histórico de tickets – Service Desk» (#peticiones_ti, #ops_tech y formulario de Service Desk), clasificado con las reglas del tablero Tendencias de tickets. Sin #hypercare. Cerca de 2% queda sin clasificar.</span>
+    </div>
+    <div class="chart">
+      <h3>Incidentes por semana: el quiebre llega con el pool de ingenieros</h3>
+      <div id="c6w"></div>
+      <div class="legend"><span><i style="background:var(--inc)"></i>Incidentes</span><span><i style="background:var(--req)"></i>Requerimientos</span></div>
+      <span class="src">Semanas ISO 23 a 39 (1-jun al 27-sep). Julio y agosto se mantienen entre ~250 y ~350 incidentes por semana; desde la semana 37 bajan a ~185–230.</span>
+    </div>
+    <div class="two">
+      <div class="chart">
+        <h3>Tickets escalados por mes</h3>
+        <div id="c6e"></div>
+        <span class="src">Fuente: slide «Septiembre: el mayor volumen de tickets con el menor escalamiento» (Cierre Q3). Escalamiento = tickets escalados / total del mes. El 91 de la otra slide cuenta escalamientos, no tickets: es otra población.</span>
+      </div>
+      <div class="chart">
+        <h3>Prevención, no solo ruteo</h3>
+        <ul class="timeline">
+          <li><time>15-jul</time><div><span class="tag">Prevención</span>Validaciones de caja en POS y fix de órdenes no ligadas en producción; sin tickets asociados después del fix.</div></li>
+          <li><time>05-ago</time><div><span class="tag">Pool</span>Arranca #pool-engineering; primera evaluación del modelo el 24-ago.</div></li>
+          <li><time>21-ago</time><div><span class="tag">Prevención</span>Reintento de confirmación de cuenta (API y webapps).</div></li>
+          <li><time>27-ago</time><div><span class="tag">Prevención</span>Flujo de cuentas sin confirmar en BFMX: menos activaciones manuales en base de datos.</div></li>
+          <li><time>28-ago</time><div><span class="tag">Ruteo</span>Escalaciones a streams solo a las 10:00 y 16:00. Ordena el ruteo; no lo cuento como prevención.</div></li>
+          <li><time>22-sep</time><div><span class="tag">Diagnóstico</span>Revisión con QA antes de escalar: orden web no generada por mala configuración de producto.</div></li>
+          <li><time>28-sep</time><div><span class="tag">Baseline</span>Acuerdo con QA: cada escalado lleva tiendas afectadas, respuesta del stream, pasos para replicar, P1/P2/P3 y solución en ClickUp.</div></li>
+        </ul>
+      </div>
+    </div>
+    <div class="evid" data-meta="6"></div>
+  </section>
+
+  <!-- ===================== META 7 ===================== -->
+  <section class="meta-sec" id="meta-7">
+    <div class="sec-head">
+      <span class="eyebrow">Fila 7 · Proyecto · Peso 25</span>
+      <div class="line"><h2>Central y autoservicio</h2><span class="pill ok">N = 85</span></div>
+    </div>
+    <div class="target">
+      <div class="box"><span class="eyebrow">Objetivo (columna F)</span><p>Central + bot y tres casos reutilizables con baseline.</p></div>
+      <div class="box leader"><span class="eyebrow">Comentario del líder (columna O)</span><p>Bot en cuatro categorías en agosto; &gt;60% de tickets de Caja atendidos, no de toda Mesa ni prueba de resolución autónoma.</p></div>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><b class="num">3 / 3</b><span>Casos reutilizables con baseline y runbook</span></div>
+      <div class="kpi"><b class="num">50 s</b><span>Primera asignación de caja sin agente (02-sep, CL)</span></div>
+      <div class="kpi"><b class="num">33%</b><span>Peso de «Asignar caja» en el total de tickets (296/mes)</span></div>
+      <div class="kpi"><b class="num">9</b><span>Runbooks documentados para el bot (ago)</span></div>
+    </div>
+    <div class="two">
+      <div class="chart">
+        <h3>Baseline: tickets por mes de las categorías principales</h3>
+        <div id="c7"></div>
+        <div class="legend"><span><i style="background:var(--accent)"></i>Caso reutilizable con runbook</span><span><i style="background:var(--line)"></i>Otras categorías</span></div>
+        <span class="src">Fuente: hoja «Bot Service Desk», pestaña Pareto (tickets de los últimos 90 días al 12-ago).</span>
+      </div>
+      <div class="chart">
+        <h3>Del runbook a la resolución sin agente</h3>
+        <ul class="timeline">
+          <li><time>04-ago</time><div><span class="tag">Runbooks</span>Contraseña Px, calendarios, órdenes no enlazadas y horario de tienda.</div></li>
+          <li><time>12-ago</time><div><span class="tag">Baseline</span>Pareto de 90 días por categoría para decidir qué automatizar.</div></li>
+          <li><time>17-ago</time><div><span class="tag">Bot</span>Encendido en #peticiones_ti. Solo responde con lo que está en el runbook; si no, escala a Service Desk.</div></li>
+          <li><time>02-sep</time><div><span class="tag">Sin agente</span>Primera asignación de caja con acciones reales en Odoo (CL): 50 s, ticket cerrado.</div></li>
+          <li><time>09-sep</time><div><span class="tag">Reúso</span>El mismo flujo, activo en B&amp;F MX.</div></li>
+          <li><time>22-sep</time><div><span class="tag">Central</span>Prototipo de la Central de Tickets; lanzada el 05-oct (Tech y Mantenimiento).</div></li>
+        </ul>
+      </div>
+    </div>
+    <p class="note">Pendiente para cerrar el comentario del líder: % de tickets de Caja resueltos sin agente contra el total de Mesa. Incidencia registrada: el 22-sep el bot asignó una caja de otra tienda; se corrigió el 09-oct.</p>
+    <div class="evid" data-meta="7"></div>
+  </section>
+
+  <footer>
+    <span>Fuentes: Slack (#hypercare_tech_galileo, #bot-service-desk, #operaciones-galileo, #pool-engineering, #customer-journey), slides Cierre Q3, Sheet «Histórico de tickets – Service Desk» y hoja «Bot Service Desk».</span>
+    <span>Tablero: <a href="https://benandfrank.github.io/Tendencias-Tickets/" target="_blank" rel="noopener">Tendencias de tickets</a></span>
+  </footer>
+</div>
+
+<script>
+(function(){
+  /* ---------- Gráficas (datos fijos del cierre Q3) ---------- */
+  const NS='http://www.w3.org/2000/svg';
+  function el(tag,attrs,text){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(text!=null)e.textContent=text;return e;}
+  function niceMax(v){const p=Math.pow(10,Math.floor(Math.log10(v)));const n=v/p;return (n<=1?1:n<=2?2:n<=2.5?2.5:n<=5?5:10)*p;}
+  function frame(w,h){return el('svg',{viewBox:`0 0 ${w} ${h}`,role:'img'});}
+  function axisY(svg,x0,x1,y0,y1,max,ticks){
+    for(let i=0;i<=ticks;i++){const v=max*i/ticks;const y=y1-(y1-y0)*i/ticks;
+      svg.appendChild(el('line',{x1:x0,x2:x1,y1:y,y2:y,stroke:'var(--line)','stroke-width':1}));
+      svg.appendChild(el('text',{x:x0-6,y:y+4,'text-anchor':'end','font-size':11,fill:'var(--muted)','font-family':'IBM Plex Mono, monospace'},v.toLocaleString('es-MX')));}
+  }
+  function bars(target,cats,series,opts){
+    const W=640,H=opts.h||260,L=48,R=12,T=16,B=34;const svg=frame(W,H);
+    const max=niceMax(Math.max(...series.flatMap(s=>s.data)));axisY(svg,L,W-R,T,H-B,max,4);
+    const gw=(W-L-R)/cats.length;const n=series.length;const bw=Math.min(34,(gw*0.7)/n);
+    cats.forEach((c,i)=>{const gx=L+gw*i+gw/2-(bw*n)/2;
+      series.forEach((s,j)=>{const v=s.data[i];const h=(H-T-B)*v/max;const x=gx+j*bw;const y=H-B-h;
+        svg.appendChild(el('rect',{x:x+1,y,width:bw-2,height:Math.max(h,0),fill:s.color,rx:2}));
+        if(opts.labels!==false)svg.appendChild(el('text',{x:x+bw/2,y:y-5,'text-anchor':'middle','font-size':11,fill:'var(--fg)','font-family':'IBM Plex Mono, monospace'},v.toLocaleString('es-MX')));});
+      svg.appendChild(el('text',{x:L+gw*i+gw/2,y:H-B+18,'text-anchor':'middle','font-size':12,fill:'var(--muted)'},c));});
+    svg.setAttribute('aria-label',opts.aria||'');document.getElementById(target).appendChild(svg);return svg;
+  }
+  // Meta 5: cédulas por mes
+  bars('c5',['Julio','Agosto','Septiembre'],[{data:[2,0,0],color:'var(--inc)'},{data:[3,0,0],color:'var(--muted)'}],{h:220,aria:'Cédulas de Odoo: julio 2 P1 y 3 P2; agosto 0; septiembre 0'});
+  // Meta 6: mensual
+  bars('c6m',['Junio','Julio','Agosto','Septiembre'],[{data:[1286,1393,1211,982],color:'var(--inc)'},{data:[850,878,965,1553],color:'var(--req)'}],{aria:'Incidentes 1286, 1393, 1211, 982 y requerimientos 850, 878, 965, 1553 de junio a septiembre'});
+  // Meta 6: escalados
+  bars('c6e',['Abr','May','Jun','Jul','Ago','Sep'],[{data:[105,105,121,68,93,59],color:'var(--accent)'}],{h:220,aria:'Tickets escalados por mes: abril 105, mayo 105, junio 121, julio 68, agosto 93, septiembre 59'});
+  // Meta 6: semanal (líneas)
+  (function(){
+    const wk=[23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39];
+    const inc=[342,292,257,304,318,334,310,280,356,248,275,236,301,305,216,186,228];
+    const req=[187,190,210,201,223,167,173,192,242,206,201,213,243,269,373,362,413];
+    const W=640,H=270,L=44,R=14,T=24,B=34;const svg=frame(W,H);const max=500;axisY(svg,L,W-R,T,H-B,max,5);
+    const x=i=>L+(W-L-R)*i/(wk.length-1);const y=v=>H-B-(H-T-B)*v/max;
+    // banda: pool consolidado (sem 37+)
+    const bx=x(14)-((W-L-R)/(wk.length-1))/2;
+    svg.appendChild(el('rect',{x:bx,y:T,width:W-R-bx,height:H-T-B,fill:'var(--ok-soft)',opacity:.7}));
+    svg.appendChild(el('text',{x:bx+6,y:T+14,'font-size':11,fill:'var(--ok)','font-weight':600},'Pool consolidado'));
+    const px=x(9);svg.appendChild(el('line',{x1:px,x2:px,y1:T,y2:H-B,stroke:'var(--muted)','stroke-dasharray':'3 3'}));
+    svg.appendChild(el('text',{x:px+4,y:H-B-6,'font-size':10.5,fill:'var(--muted)'},'05-ago · arranca el pool'));
+    [[req,'var(--req)'],[inc,'var(--inc)']].forEach(([d,c])=>{
+      svg.appendChild(el('polyline',{points:d.map((v,i)=>x(i)+','+y(v)).join(' '),fill:'none',stroke:c,'stroke-width':2.2,'stroke-linejoin':'round'}));
+      const i=d.length-1;svg.appendChild(el('circle',{cx:x(i),cy:y(d[i]),r:3.5,fill:c}));
+      svg.appendChild(el('text',{x:x(i)-6,y:y(d[i])-8,'text-anchor':'end','font-size':11,fill:c,'font-family':'IBM Plex Mono, monospace'},String(d[i])));});
+    wk.forEach((w,i)=>{if(i%2===0)svg.appendChild(el('text',{x:x(i),y:H-B+18,'text-anchor':'middle','font-size':11,fill:'var(--muted)','font-family':'IBM Plex Mono, monospace'},'S'+w));});
+    svg.setAttribute('aria-label','Incidentes y requerimientos por semana, semanas 23 a 39');
+    document.getElementById('c6w').appendChild(svg);
+  })();
+  // Meta 7: pareto horizontal
+  (function(){
+    const rows=[['Asignar caja',296,1],['Error Mercado Pago',78,0],['Salida de orden de buzón',76,0],['Cambio de compañía',66,0],['Cerrar consultorios',64,1],['Entrada de orden',60,0],['Kit armazón',54,0],['Fondo de pantalla iPad',12,1]];
+    const W=640,rowH=28,L=170,R=50,T=6;const H=T+rows.length*rowH+6;const svg=frame(W,H);const max=300;
+    rows.forEach(([n,v,hl],i)=>{const y=T+i*rowH;const w=(W-L-R)*v/max;
+      svg.appendChild(el('text',{x:L-8,y:y+17,'text-anchor':'end','font-size':12,fill:hl?'var(--fg)':'var(--muted)','font-weight':hl?600:400},n));
+      svg.appendChild(el('rect',{x:L,y:y+5,width:Math.max(w,2),height:rowH-10,rx:2,fill:hl?'var(--accent)':'var(--line)'}));
+      svg.appendChild(el('text',{x:L+w+6,y:y+17,'font-size':11.5,fill:'var(--fg)','font-family':'IBM Plex Mono, monospace'},String(v)));});
+    svg.setAttribute('aria-label','Tickets por mes: Asignar caja 296, Cerrar consultorios 64, Fondo de pantalla 12, entre otras categorías');
+    document.getElementById('c7').appendChild(svg);
+  })();
+
+  /* ---------- Evidencias cargadas (db + assets) ---------- */
+  const sections=[...document.querySelectorAll('.evid')];
+  const lists={};
+  sections.forEach(sec=>{
+    const m=sec.dataset.meta;
+    const head=document.createElement('div');head.className='evid-head';
+    const h=document.createElement('h3');h.textContent='Evidencias adjuntas';
+    const st=document.createElement('span');st.className='status';st.textContent='Cargando evidencias…';
+    head.append(h,st);
+    const list=document.createElement('div');list.className='evid-list';
+    sec.append(head,list);
+    lists[m]={list,st,sec,items:[]};
+  });
+
+  function fmtDate(iso){try{return new Date(iso).toLocaleDateString('es-MX',{day:'2-digit',month:'short',year:'numeric'});}catch(e){return '';}}
+  function safeLink(u){return typeof u==='string'&&/^https:\/\//i.test(u)?u:null;}
+
+  let db=null,assets=null,canWrite=false;
+
+  function render(m){
+    const L=lists[m];L.list.replaceChildren();
+    if(!L.items.length){const e=document.createElement('div');e.className='empty';
+      e.textContent=assets?'Aún no hay evidencias para esta meta. Sube una captura, un PDF o pega un link con el formulario de abajo.':'Aún no hay evidencias adjuntas para esta meta.';
+      L.list.appendChild(e);return;}
+    L.items.forEach(d=>{
+      const v=d.data();const card=document.createElement('article');card.className='ev';
+      const th=document.createElement('div');th.className='thumb';
+      const ct=String(v.contentType||'');
+      if(v.assetId&&ct.startsWith('image/')){const img=document.createElement('img');img.alt=String(v.titulo||'Evidencia');img.loading='lazy';img.src='/_blob/'+encodeURIComponent(String(v.assetId));img.onerror=()=>{th.textContent='Archivo no disponible';};th.appendChild(img);}
+      else if(v.assetId){th.textContent=ct==='application/pdf'?'PDF':(ct.split('/')[1]||'Archivo').toUpperCase();}
+      else{th.textContent='Link';}
+      const body=document.createElement('div');body.className='body';
+      const b=document.createElement('b');b.textContent=String(v.titulo||'Sin título');body.appendChild(b);
+      if(v.nota){const p=document.createElement('p');p.textContent=String(v.nota);body.appendChild(p);}
+      const acts=document.createElement('div');acts.className='acts';
+      const left=document.createElement('span');
+      const href=v.assetId?('/_blob/'+encodeURIComponent(String(v.assetId))):safeLink(v.link);
+      if(href){const a=document.createElement('a');a.href=href;a.target='_blank';a.rel='noopener';a.textContent=v.assetId?'Abrir archivo':'Abrir link';left.appendChild(a);}
+      const dt=document.createElement('span');dt.className='status';dt.textContent=' · '+fmtDate(v.creado);left.appendChild(dt);
+      acts.appendChild(left);
+      if(canWrite){const del=document.createElement('button');del.type='button';del.className='ghost';del.textContent='Quitar';
+        del.addEventListener('click',async()=>{
+          if(del.dataset.armed!=='1'){del.dataset.armed='1';del.textContent='¿Quitar? Clic otra vez';setTimeout(()=>{del.dataset.armed='';del.textContent='Quitar';},4000);return;}
+          del.disabled=true;
+          try{await db.doc('evidencias/'+d.id).delete();if(v.assetId&&assets){try{await assets.delete(String(v.assetId));}catch(e){}}}
+          catch(e){del.disabled=false;del.textContent='No se pudo quitar';}
+        });acts.appendChild(del);}
+      body.appendChild(acts);card.append(th,body);L.list.appendChild(card);
+    });
+  }
+
+  function buildForm(m){
+    const L=lists[m];const f=document.createElement('form');f.className='up';f.noValidate=true;
+    f.innerHTML=`<h3>Agregar evidencia a la fila ${m}</h3>
+      <div class="grid">
+        <label>Título<input type="text" id="t${m}" maxlength="120" placeholder="Ej. Captura del tablero, sep 2026"></label>
+        <label>Link (opcional, https://)<input type="url" id="l${m}" maxlength="500" placeholder="https://"></label>
+      </div>
+      <label>Archivo (imagen, PDF, CSV; máx. 20 MB)<input type="file" id="f${m}" accept="image/*,application/pdf,.csv,.txt,.md,.json"></label>
+      <label>Qué demuestra<textarea id="n${m}" maxlength="600" placeholder="Ej. Incidentes por semana; el quiebre es en la semana 37"></textarea></label>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center"><button type="submit" id="b${m}">Guardar evidencia</button><span class="status" id="s${m}"></span></div>`;
+    L.sec.appendChild(f);
+    const typeByExt={csv:'text/csv',txt:'text/plain',md:'text/markdown',json:'application/json',pdf:'application/pdf'};
+    f.addEventListener('submit',async ev=>{
+      ev.preventDefault();
+      const t=f.querySelector('#t'+m),l=f.querySelector('#l'+m),fi=f.querySelector('#f'+m),n=f.querySelector('#n'+m),b=f.querySelector('#b'+m),s=f.querySelector('#s'+m);
+      s.className='status';const titulo=t.value.trim();const link=l.value.trim();const file=fi.files&&fi.files[0];
+      if(!titulo){s.className='status err';s.textContent='Escribe un título para la evidencia.';t.focus();return;}
+      if(!file&&!link){s.className='status err';s.textContent='Adjunta un archivo o pega un link.';return;}
+      if(link&&!safeLink(link)){s.className='status err';s.textContent='El link debe empezar con https://';l.focus();return;}
+      b.disabled=true;s.textContent=file?'Subiendo archivo…':'Guardando…';
+      try{
+        const doc={meta:m,titulo,nota:n.value.trim(),link:link||'',creado:new Date().toISOString()};
+        if(file){
+          const ext=(file.name.split('.').pop()||'').toLowerCase();
+          const opts=(!file.type||/;|vnd\.ms-excel|^text\/(?!csv|plain|markdown)/.test(file.type))&&typeByExt[ext]?{type:typeByExt[ext]}:undefined;
+          const up=await assets.upload(file,opts);
+          doc.assetId=up.id;doc.contentType=up.contentType;doc.archivo=file.name.slice(0,160);
+        }
+        await db.collection('evidencias').add(doc);
+        f.reset();s.textContent='Evidencia guardada.';
+      }catch(e){
+        s.className='status err';
+        const c=e&&e.code;
+        s.textContent=c==='too_large'?'El archivo pasa de 20 MB. Comprímelo o súbelo en partes.':c==='unsupported_type'?'Ese tipo de archivo no se puede subir. Usa imagen, PDF, CSV o texto.':c==='quota_or_state'?'Se llenó el espacio de archivos de esta página.':c==='rate_limited'?'Demasiados intentos seguidos. Espera un momento y vuelve a intentar.':'No se pudo guardar. Revisa tu conexión y vuelve a intentar.';
+      }finally{b.disabled=false;}
+    });
+  }
+
+  (async()=>{
+    const claude=window.claude;
+    if(!claude||!claude.use){Object.values(lists).forEach(L=>{L.st.textContent='Las evidencias adjuntas se ven al abrir la página en Claude.';render0(L);});return;}
+    const timer=setTimeout(()=>{Object.values(lists).forEach(L=>{if(L.st.textContent.startsWith('Cargando'))L.st.textContent='No se pudo conectar todavía con las evidencias guardadas.';});},10000);
+    db=await claude.use('db');
+    if(!db){clearTimeout(timer);Object.values(lists).forEach(L=>{L.st.textContent='Inicia sesión para ver las evidencias adjuntas.';render0(L);});return;}
+    assets=await claude.use('assets');
+    try{const user=await claude.use('user');canWrite=!!(user&&await user.canEdit());}catch(e){canWrite=false;}
+    if(assets&&canWrite)Object.keys(lists).forEach(buildForm);
+    db.collection('evidencias').orderBy('creado','desc').onSnapshot(snap=>{
+      if(!snap.metadata.fromCache)clearTimeout(timer);
+      Object.values(lists).forEach(L=>L.items=[]);
+      snap.docs.forEach(d=>{const v=d.data()||{};const m=String(v.meta||'');if(lists[m])lists[m].items.push(d);});
+      Object.entries(lists).forEach(([m,L])=>{L.st.textContent=L.items.length?(L.items.length+(L.items.length===1?' evidencia':' evidencias')):'';render(m);});
+    },err=>{clearTimeout(timer);Object.values(lists).forEach(L=>{L.st.textContent='No se pudieron cargar las evidencias guardadas.';});});
+  })();
+  function render0(L){L.list.replaceChildren();const e=document.createElement('div');e.className='empty';e.textContent='Las evidencias adjuntas aparecen aquí.';L.list.appendChild(e);}
+})();
+</script>
+
+</body>
+</html>
