@@ -97,6 +97,10 @@ tr:last-child td{border-bottom:0}
 .timeline time{font-family:var(--font-mono);font-size:12.5px;color:var(--muted);padding-top:1px}
 .timeline .tag{font-size:11px;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:.04em;margin-right:6px}
 .note{font-size:13px;color:var(--muted)}
+a.ref{font-family:var(--font-mono);font-size:11.5px;font-weight:500;color:var(--accent);text-decoration:none;white-space:nowrap;border-bottom:1px solid var(--accent-soft)}
+a.ref:hover{border-bottom-color:var(--accent)}
+.refs{display:flex;flex-wrap:wrap;gap:4px 12px;margin-top:4px}
+.kpi .refs{margin-top:6px}
 
 /* Evidencias cargadas */
 .evid{display:grid;gap:12px}
@@ -130,7 +134,7 @@ footer{font-size:12.5px;color:var(--muted);border-top:1px solid var(--line);padd
   <header class="top">
     <span class="eyebrow">1:1 P&amp;T · Cierre Q3 2026 · Mesa de Servicio</span>
     <h1>Evidencias de resultados Q3</h1>
-    <p>Lo logrado en las tres metas de Q3, con los números y la fuente de cada uno. Cada sección responde al comentario del líder en la columna O de la hoja Memo.</p>
+    <p>Lo logrado en las tres metas de Q3. Cada número y cada evento trae un link a la operación que lo respalda: la cédula, el ticket, el RCA, el PR o el mensaje en Slack. Cada sección responde al comentario del líder en la columna O de la hoja Memo.</p>
     <div class="meta"><span>Guillermo Villanueva (Memo)</span><span>Periodo: 1-jul al 30-sep-2026</span><span class="mono">Pesos 40 / 35 / 25</span></div>
   </header>
 
@@ -169,37 +173,38 @@ footer{font-size:12.5px;color:var(--muted);border-top:1px solid var(--line);padd
       <div class="box leader"><span class="eyebrow">Comentario del líder (columna O)</span><p>Incidentes 779→653 agosto a septiembre (−16%). No prueba reducción de las causas seleccionadas.</p></div>
     </div>
     <div class="kpis">
-      <div class="kpi"><b class="num">2 / 2</b><span>P1 de Q3 con ticket y RCA (100%)</span></div>
-      <div class="kpi"><b class="num down">5 → 0</b><span>Cédulas de Odoo, julio vs septiembre</span></div>
-      <div class="kpi"><b class="num down">2 → 0</b><span>P1, julio vs agosto y septiembre</span></div>
-      <div class="kpi"><b class="num down">−16%</b><span>Incidentes totales, ago → sep (779 → 653)</span></div>
+      <div class="kpi"><b class="num">2 / 2</b><span>P1 de Q3 con ticket y RCA (100%)</span><div class="refs"><a class="ref" href="https://benandfrank.slack.com/archives/C065RGQNX9U/p1783009054261619" target="_blank" rel="noopener">P1 02-jul ↗</a><a class="ref" href="https://benandfrank.slack.com/archives/C065RGQNX9U/p1784597563070079" target="_blank" rel="noopener">P1 20-jul ↗</a></div></div>
+      <div class="kpi"><b class="num down">5 → 0</b><span>Cédulas de Odoo, julio vs septiembre</span><div class="refs"><a class="ref" href="https://benandfrank.slack.com/archives/C065RGQNX9U" target="_blank" rel="noopener">#hypercare_tech_galileo ↗</a></div></div>
+      <div class="kpi"><b class="num down">2 → 0</b><span>P1, julio vs agosto y septiembre</span><div class="refs"><a class="ref" href="#tabla-5">Tabla de cédulas ↓</a></div></div>
+      <div class="kpi"><b class="num down">−16%</b><span>Incidentes totales, ago → sep (779 → 653)</span><div class="refs"><a class="ref" href="https://docs.google.com/presentation/d/1prF_aJt29ZiJ6UoOOmQL38RakZoBY6M8iov3GnMHwIo/edit#slide=id.h308ddb23ac6fe508_91_399" target="_blank" rel="noopener">Slide Cierre Q3 ↗</a></div></div>
     </div>
     <div class="two">
       <div class="chart">
         <h3>Cédulas de incidente de Odoo por mes</h3>
         <div id="c5"></div>
         <div class="legend"><span><i style="background:var(--inc)"></i>P1</span><span><i style="background:var(--muted)"></i>P2</span></div>
-        <span class="src">Fuente: cédulas publicadas en #hypercare_tech_galileo, 1-jul al 30-sep.</span>
+        <span class="src">Fuente: cédulas publicadas en <a href="https://benandfrank.slack.com/archives/C065RGQNX9U" target="_blank" rel="noopener">#hypercare_tech_galileo</a>, 1-jul al 30-sep. Cada cédula está ligada en la tabla de abajo.</span>
       </div>
       <div class="chart">
         <h3>Causa raíz eliminada: jobs atorados (PgDog)</h3>
         <ul class="timeline">
-          <li><time>30-ago</time><div>Citas sin reflejarse en más de 15 templos. Causa: el timeout de PgDog (60 s) chocaba con el del jobrunner de Odoo (60 s).</div></li>
-          <li><time>31-ago</time><div><span class="tag">Fix</span>gitops#35 en producción: timeout a 180 s, ADR y CI guard que impide bajarlo.</div></li>
-          <li><time>01-sep</time><div><span class="tag">Detección</span>Alertas odo10 (desconexión) y odo11 (recuperación agotada) en vivo.</div></li>
-          <li><time>sep</time><div>Sin cédulas de Odoo en septiembre.</div></li>
+          <li><time>29-ago</time><div>Citas sin reflejarse en más de 15 templos; lo reporté y abrí el seguimiento en #hypercare.<div class="refs"><a class="ref" href="https://benandfrank.slack.com/archives/C065RGQNX9U/p1788033829762439" target="_blank" rel="noopener">Reporte ↗</a></div></div></li>
+          <li><time>31-ago</time><div><span class="tag">Causa raíz</span>El timeout de PgDog (60 s) chocaba con el del jobrunner de Odoo (60 s) y dejaba jobs atorados.<div class="refs"><a class="ref" href="https://benandfrank.slack.com/archives/C065RGQNX9U/p1788185666139729" target="_blank" rel="noopener">Análisis ↗</a></div></div></li>
+          <li><time>31-ago</time><div><span class="tag">Fix</span>gitops#35 en producción: timeout a 180 s, ADR y CI guard que impide bajarlo.<div class="refs"><a class="ref" href="https://github.com/benandfrank/galileo-gitops/pull/35" target="_blank" rel="noopener">gitops#35 ↗</a></div></div></li>
+          <li><time>01-sep</time><div><span class="tag">Detección</span>Alertas odo10 (desconexión) y odo11 (recuperación agotada) en vivo.<div class="refs"><a class="ref" href="https://github.com/benandfrank/galileo-oac/pull/7" target="_blank" rel="noopener">oac#7 ↗</a></div></div></li>
+          <li><time>sep</time><div>Sin cédulas de Odoo en septiembre; el único aviso del mes fue el corte de luz en Vallejo.<div class="refs"><a class="ref" href="https://benandfrank.slack.com/archives/C065RGQNX9U/p1789423715614639" target="_blank" rel="noopener">Aviso 14-sep ↗</a></div></div></li>
         </ul>
       </div>
     </div>
-    <div class="tbl">
+    <div class="tbl" id="tabla-5">
       <table>
-        <thead><tr><th>Fecha</th><th>Sev.</th><th>Incidente</th><th>Duración</th><th>Ticket</th><th>RCA</th></tr></thead>
+        <thead><tr><th>Fecha</th><th>Sev.</th><th>Incidente</th><th>Duración</th><th>Cédula</th><th>Ticket</th><th>RCA</th></tr></thead>
         <tbody>
-          <tr><td class="mono">01-jul</td><td><span class="sev p2">P2</span></td><td>Lentitud en Lab y Backoffice (CO/MX)</td><td class="num">17 min</td><td><a href="https://app.clickup.com/t/14177510/86e23yzg0" target="_blank" rel="noopener">86e23yzg0</a></td><td><a href="https://docs.google.com/document/d/1uaOshiXyEVY-i4uBAkZrhBAU-B41qyTe/edit" target="_blank" rel="noopener">RCA</a></td></tr>
-          <tr><td class="mono">02-jul</td><td><span class="sev">P1</span></td><td>Odoo sin servicio (CO/MX/CL)</td><td class="num">14 min</td><td><a href="https://app.clickup.com/t/86e24kbvg" target="_blank" rel="noopener">86e24kbvg</a></td><td><a href="https://docs.google.com/document/d/1uaOshiXyEVY-i4uBAkZrhBAU-B41qyTe/edit" target="_blank" rel="noopener">RCA</a></td></tr>
-          <tr><td class="mono">14-jul</td><td><span class="sev p2">P2</span></td><td>Lentitud en Lab y Backoffice (CO/CL/MX)</td><td class="num">13 min</td><td><a href="https://app.clickup.com/t/14177510/86e2b6e1r" target="_blank" rel="noopener">86e2b6e1r</a></td><td><a href="https://docs.google.com/document/d/1CyPPbtBldUd0taO_fhIVm5zzH0ZkwBfz/edit" target="_blank" rel="noopener">RCA</a></td></tr>
-          <tr><td class="mono">20-jul</td><td><span class="sev">P1</span></td><td>Odoo sin servicio (el título de la cédula dice P2)</td><td class="num">67 min</td><td><a href="https://app.clickup.com/t/14177510/86e2e35xe" target="_blank" rel="noopener">86e2e35xe</a></td><td><a href="https://docs.google.com/document/d/18W8t7UqidBj5C4xi5PFKC9j3VFepUZ5O/edit" target="_blank" rel="noopener">RCA</a></td></tr>
-          <tr><td class="mono">27-jul</td><td><span class="sev p2">P2</span></td><td>Intermitencia en Odoo (12 min sin servicio)</td><td class="num">40 min</td><td><a href="https://app.clickup.com/t/14177510/86e2h2mwy" target="_blank" rel="noopener">86e2h2mwy</a></td><td><a href="https://docs.google.com/document/d/19gUgsn4dPPAsB1xjhLHYuoXwfJ0hyNBq/edit" target="_blank" rel="noopener">RCA</a></td></tr>
+          <tr><td class="mono">01-jul</td><td><span class="sev p2">P2</span></td><td>Lentitud en Lab y Backoffice (CO/MX)</td><td class="num">17 min</td><td><a href="https://benandfrank.slack.com/archives/C065RGQNX9U/p1782919468233309" target="_blank" rel="noopener">Slack</a></td><td><a href="https://app.clickup.com/t/14177510/86e23yzg0" target="_blank" rel="noopener">86e23yzg0</a></td><td><a href="https://docs.google.com/document/d/1uaOshiXyEVY-i4uBAkZrhBAU-B41qyTe/edit" target="_blank" rel="noopener">RCA</a></td></tr>
+          <tr><td class="mono">02-jul</td><td><span class="sev">P1</span></td><td>Odoo sin servicio (CO/MX/CL)</td><td class="num">14 min</td><td><a href="https://benandfrank.slack.com/archives/C065RGQNX9U/p1783009054261619" target="_blank" rel="noopener">Slack</a></td><td><a href="https://app.clickup.com/t/86e24kbvg" target="_blank" rel="noopener">86e24kbvg</a></td><td><a href="https://docs.google.com/document/d/1uaOshiXyEVY-i4uBAkZrhBAU-B41qyTe/edit" target="_blank" rel="noopener">RCA</a></td></tr>
+          <tr><td class="mono">14-jul</td><td><span class="sev p2">P2</span></td><td>Lentitud en Lab y Backoffice (CO/CL/MX)</td><td class="num">13 min</td><td><a href="https://benandfrank.slack.com/archives/C065RGQNX9U/p1784059241507059" target="_blank" rel="noopener">Slack</a></td><td><a href="https://app.clickup.com/t/14177510/86e2b6e1r" target="_blank" rel="noopener">86e2b6e1r</a></td><td><a href="https://docs.google.com/document/d/1CyPPbtBldUd0taO_fhIVm5zzH0ZkwBfz/edit" target="_blank" rel="noopener">RCA</a></td></tr>
+          <tr><td class="mono">20-jul</td><td><span class="sev">P1</span></td><td>Odoo sin servicio (el título de la cédula dice P2)</td><td class="num">67 min</td><td><a href="https://benandfrank.slack.com/archives/C065RGQNX9U/p1784597563070079" target="_blank" rel="noopener">Slack</a></td><td><a href="https://app.clickup.com/t/14177510/86e2e35xe" target="_blank" rel="noopener">86e2e35xe</a></td><td><a href="https://docs.google.com/document/d/18W8t7UqidBj5C4xi5PFKC9j3VFepUZ5O/edit" target="_blank" rel="noopener">RCA</a></td></tr>
+          <tr><td class="mono">27-jul</td><td><span class="sev p2">P2</span></td><td>Intermitencia en Odoo (12 min sin servicio)</td><td class="num">40 min</td><td><a href="https://benandfrank.slack.com/archives/C065RGQNX9U/p1785184555339099" target="_blank" rel="noopener">Slack</a></td><td><a href="https://app.clickup.com/t/14177510/86e2h2mwy" target="_blank" rel="noopener">86e2h2mwy</a></td><td><a href="https://docs.google.com/document/d/19gUgsn4dPPAsB1xjhLHYuoXwfJ0hyNBq/edit" target="_blank" rel="noopener">RCA</a></td></tr>
         </tbody>
       </table>
     </div>
@@ -217,39 +222,39 @@ footer{font-size:12.5px;color:var(--muted);border-top:1px solid var(--line);padd
       <div class="box leader"><span class="eyebrow">Comentario del líder (columna O)</span><p>Dos slides reportan 91 y 59 escalaciones de sep. Conciliar población; ruteo ≠ prevención.</p></div>
     </div>
     <div class="kpis">
-      <div class="kpi"><b class="num down">−30%</b><span>Incidentes, jul → sep (1,393 → 982)</span></div>
-      <div class="kpi"><b class="num up">+77%</b><span>Requerimientos, jul → sep (878 → 1,553)</span></div>
-      <div class="kpi"><b class="num">+12%</b><span>Total de tickets, jul → sep (2,310 → 2,590)</span></div>
-      <div class="kpi"><b class="num down">7.90% → 2.63%</b><span>Tickets escalados / total, jun → sep</span></div>
+      <div class="kpi"><b class="num down">−30%</b><span>Incidentes, jul → sep (1,393 → 982)</span><div class="refs"><a class="ref" href="https://benandfrank.github.io/Tendencias-Tickets/#rango=ytd&amp;gran=mes&amp;clase=Incidente" target="_blank" rel="noopener">Tablero · Incidentes ↗</a></div></div>
+      <div class="kpi"><b class="num up">+77%</b><span>Requerimientos, jul → sep (878 → 1,553)</span><div class="refs"><a class="ref" href="https://benandfrank.github.io/Tendencias-Tickets/#rango=ytd&amp;gran=mes&amp;clase=Requerimiento" target="_blank" rel="noopener">Tablero · Requerimientos ↗</a></div></div>
+      <div class="kpi"><b class="num">+12%</b><span>Total de tickets, jul → sep (2,310 → 2,590)</span><div class="refs"><a class="ref" href="https://docs.google.com/spreadsheets/d/1TDxOLtDCTH-uE3OJAeWDEUbnyM5j28vMwYWNhqinqt4/edit" target="_blank" rel="noopener">Histórico de tickets ↗</a></div></div>
+      <div class="kpi"><b class="num down">7.90% → 2.63%</b><span>Tickets escalados / total, jun → sep</span><div class="refs"><a class="ref" href="https://docs.google.com/presentation/d/1prF_aJt29ZiJ6UoOOmQL38RakZoBY6M8iov3GnMHwIo/edit#slide=id.h6364ebb26a69f5c6_0_1" target="_blank" rel="noopener">Slide escalamiento ↗</a></div></div>
     </div>
     <div class="chart">
       <h3>Más tickets, menos incidentes</h3>
       <div id="c6m"></div>
       <div class="legend"><span><i style="background:var(--inc)"></i>Incidentes</span><span><i style="background:var(--req)"></i>Requerimientos</span></div>
-      <span class="src">Fuente: Sheet «Histórico de tickets – Service Desk» (#peticiones_ti, #ops_tech y formulario de Service Desk), clasificado con las reglas del tablero Tendencias de tickets. Sin #hypercare. Cerca de 2% queda sin clasificar.</span>
+      <span class="src">Fuente: Sheet <a href="https://docs.google.com/spreadsheets/d/1TDxOLtDCTH-uE3OJAeWDEUbnyM5j28vMwYWNhqinqt4/edit" target="_blank" rel="noopener">«Histórico de tickets – Service Desk»</a> (#peticiones_ti, #ops_tech y formulario de Service Desk), clasificado con las reglas del tablero <a href="https://benandfrank.github.io/Tendencias-Tickets/" target="_blank" rel="noopener">Tendencias de tickets</a>. Sin #hypercare. Cerca de 2% queda sin clasificar.</span>
     </div>
     <div class="chart">
       <h3>Incidentes por semana: el quiebre llega con el pool de ingenieros</h3>
       <div id="c6w"></div>
       <div class="legend"><span><i style="background:var(--inc)"></i>Incidentes</span><span><i style="background:var(--req)"></i>Requerimientos</span></div>
-      <span class="src">Semanas ISO 23 a 39 (1-jun al 27-sep). Julio y agosto se mantienen entre ~250 y ~350 incidentes por semana; desde la semana 37 bajan a ~185–230.</span>
+      <span class="src">Semanas ISO 23 a 39 (1-jun al 27-sep). Julio y agosto se mantienen entre ~250 y ~350 incidentes por semana; desde la semana 37 bajan a ~185–230. Fuente: <a href="https://benandfrank.github.io/Tendencias-Tickets/#rango=ytd&amp;gran=semana&amp;clase=Incidente" target="_blank" rel="noopener">tablero por semana</a> y <a href="https://benandfrank.slack.com/archives/C0BN5LAC19C" target="_blank" rel="noopener">#pool-engineering</a>.</span>
     </div>
     <div class="two">
       <div class="chart">
         <h3>Tickets escalados por mes</h3>
         <div id="c6e"></div>
-        <span class="src">Fuente: slide «Septiembre: el mayor volumen de tickets con el menor escalamiento» (Cierre Q3). Escalamiento = tickets escalados / total del mes. El 91 de la otra slide cuenta escalamientos, no tickets: es otra población.</span>
+        <span class="src">Fuente: slide <a href="https://docs.google.com/presentation/d/1prF_aJt29ZiJ6UoOOmQL38RakZoBY6M8iov3GnMHwIo/edit#slide=id.h6364ebb26a69f5c6_0_1" target="_blank" rel="noopener">«Septiembre: el mayor volumen de tickets con el menor escalamiento»</a> (Cierre Q3). Escalamiento = tickets escalados / total del mes. El 91 de la otra slide cuenta escalamientos, no tickets: es otra población.</span>
       </div>
       <div class="chart">
         <h3>Prevención, no solo ruteo</h3>
         <ul class="timeline">
-          <li><time>15-jul</time><div><span class="tag">Prevención</span>Validaciones de caja en POS y fix de órdenes no ligadas en producción; sin tickets asociados después del fix.</div></li>
-          <li><time>05-ago</time><div><span class="tag">Pool</span>Arranca #pool-engineering; primera evaluación del modelo el 24-ago.</div></li>
-          <li><time>21-ago</time><div><span class="tag">Prevención</span>Reintento de confirmación de cuenta (API y webapps).</div></li>
-          <li><time>27-ago</time><div><span class="tag">Prevención</span>Flujo de cuentas sin confirmar en BFMX: menos activaciones manuales en base de datos.</div></li>
-          <li><time>28-ago</time><div><span class="tag">Ruteo</span>Escalaciones a streams solo a las 10:00 y 16:00. Ordena el ruteo; no lo cuento como prevención.</div></li>
-          <li><time>22-sep</time><div><span class="tag">Diagnóstico</span>Revisión con QA antes de escalar: orden web no generada por mala configuración de producto.</div></li>
-          <li><time>28-sep</time><div><span class="tag">Baseline</span>Acuerdo con QA: cada escalado lleva tiendas afectadas, respuesta del stream, pasos para replicar, P1/P2/P3 y solución en ClickUp.</div></li>
+          <li><time>15-jul</time><div><span class="tag">Prevención</span>Validaciones de caja en POS y fix de órdenes no ligadas en producción; sin tickets asociados después del fix.<div class="refs"><a class="ref" href="https://benandfrank.slack.com/archives/C0AAJ7GK023/p1784133454236799" target="_blank" rel="noopener">Resumen de reducción ↗</a></div></div></li>
+          <li><time>05-ago</time><div><span class="tag">Pool</span>Arranca #pool-engineering; primera evaluación del modelo el 24-ago.<div class="refs"><a class="ref" href="https://benandfrank.slack.com/archives/C0BN5LAC19C" target="_blank" rel="noopener">Canal ↗</a><a class="ref" href="https://benandfrank.slack.com/archives/C0BN5LAC19C/p1787583176663239" target="_blank" rel="noopener">Evaluación 24-ago ↗</a></div></div></li>
+          <li><time>21-ago</time><div><span class="tag">Prevención</span>Reintento de confirmación de cuenta (API y webapps) para quitar tickets de «no puedo entrar».<div class="refs"><a class="ref" href="https://benandfrank.slack.com/archives/C0AAJ7GK023/p1787349833223429?thread_ts=1787349621.398929&amp;cid=C0AAJ7GK023" target="_blank" rel="noopener">Anuncio ↗</a><a class="ref" href="https://github.com/benandfrank/galileo-webapp/pull/3400" target="_blank" rel="noopener">webapp#3400 ↗</a></div></div></li>
+          <li><time>27-ago</time><div><span class="tag">Prevención</span>Flujo de cuentas sin confirmar en BFMX y guía para Service Desk: menos activaciones manuales en base de datos.<div class="refs"><a class="ref" href="https://benandfrank.slack.com/archives/C06R8JTUBQF/p1787853517470599" target="_blank" rel="noopener">Guía operativa ↗</a></div></div></li>
+          <li><time>28-ago</time><div><span class="tag">Ruteo</span>Escalaciones a streams solo a las 10:00 y 16:00; P1 sigue por #hypercare. Ordena el ruteo; no lo cuento como prevención.<div class="refs"><a class="ref" href="https://benandfrank.slack.com/archives/C015TG16HPH/p1787942422488859" target="_blank" rel="noopener">Anuncio a streams ↗</a></div></div></li>
+          <li><time>22-sep</time><div><span class="tag">Diagnóstico</span>Revisión con QA antes de escalar: orden web no generada por mala configuración de producto.<div class="refs"><a class="ref" href="https://benandfrank.slack.com/archives/C07SGH21LNL/p1790132431143389?thread_ts=1790132431.143389&amp;cid=C07SGH21LNL" target="_blank" rel="noopener">Reporte de turno ↗</a></div></div></li>
+          <li><time>28-sep</time><div><span class="tag">Baseline</span>Acuerdo con QA: cada escalado lleva tiendas afectadas, respuesta del stream, pasos para replicar, P1/P2/P3 y solución en ClickUp.<div class="refs"><a class="ref" href="https://benandfrank.slack.com/archives/C07SGH21LNL/p1790633617547719?thread_ts=1790633617.547719&amp;cid=C07SGH21LNL" target="_blank" rel="noopener">Acuerdo con QA ↗</a></div></div></li>
         </ul>
       </div>
     </div>
@@ -267,37 +272,37 @@ footer{font-size:12.5px;color:var(--muted);border-top:1px solid var(--line);padd
       <div class="box leader"><span class="eyebrow">Comentario del líder (columna O)</span><p>Bot en cuatro categorías en agosto; &gt;60% de tickets de Caja atendidos, no de toda Mesa ni prueba de resolución autónoma.</p></div>
     </div>
     <div class="kpis">
-      <div class="kpi"><b class="num">3 / 3</b><span>Casos reutilizables con baseline y runbook</span></div>
-      <div class="kpi"><b class="num">50 s</b><span>Primera asignación de caja sin agente (02-sep, CL)</span></div>
-      <div class="kpi"><b class="num">33%</b><span>Peso de «Asignar caja» en el total de tickets (296/mes)</span></div>
-      <div class="kpi"><b class="num">9</b><span>Runbooks documentados para el bot (ago)</span></div>
+      <div class="kpi"><b class="num">3 / 3</b><span>Casos reutilizables con baseline y runbook</span><div class="refs"><a class="ref" href="https://docs.google.com/document/d/1BRPO_jeBFlzZvkrelag2lLvFRoEQTzXdH3XbRv3Cpg4/edit" target="_blank" rel="noopener">Caja ↗</a><a class="ref" href="https://benandfrank.slack.com/archives/C0AC6H27C57/p1787777275975069" target="_blank" rel="noopener">Consultorios ↗</a><a class="ref" href="https://docs.google.com/document/d/1A81XVaAelUExuU8uuqDh_r2rf2cS7aZFEhocAjV6qUk/edit" target="_blank" rel="noopener">Fondo ↗</a></div></div>
+      <div class="kpi"><b class="num">50 s</b><span>Primera asignación de caja sin agente (02-sep, CL)</span><div class="refs"><a class="ref" href="https://benandfrank.slack.com/archives/C0AC6H27C57/p1788361727050279" target="_blank" rel="noopener">Primer ticket resuelto ↗</a></div></div>
+      <div class="kpi"><b class="num">33%</b><span>Peso de «Asignar caja» en el total de tickets (296/mes)</span><div class="refs"><a class="ref" href="https://docs.google.com/spreadsheets/d/1b67YFLgKFHVX22FVPSZRsm_xExd1UekPhrDg6tHoX-I/edit#gid=2004704199" target="_blank" rel="noopener">Pareto ↗</a></div></div>
+      <div class="kpi"><b class="num">8</b><span>Runbooks documentados para el bot (4 al 26-ago)</span><div class="refs"><a class="ref" href="https://benandfrank.slack.com/archives/C0AC6H27C57/p1785882088513669" target="_blank" rel="noopener">04-ago ↗</a><a class="ref" href="https://benandfrank.slack.com/archives/C0AC6H27C57/p1786477130264439" target="_blank" rel="noopener">11-ago ↗</a><a class="ref" href="https://benandfrank.slack.com/archives/C0AC6H27C57/p1787610150322839" target="_blank" rel="noopener">24-ago ↗</a></div></div>
     </div>
     <div class="two">
       <div class="chart">
         <h3>Baseline: tickets por mes de las categorías principales</h3>
         <div id="c7"></div>
         <div class="legend"><span><i style="background:var(--accent)"></i>Caso reutilizable con runbook</span><span><i style="background:var(--line)"></i>Otras categorías</span></div>
-        <span class="src">Fuente: hoja «Bot Service Desk», pestaña Pareto (tickets de los últimos 90 días al 12-ago).</span>
+        <span class="src">Fuente: hoja <a href="https://docs.google.com/spreadsheets/d/1b67YFLgKFHVX22FVPSZRsm_xExd1UekPhrDg6tHoX-I/edit#gid=2004704199" target="_blank" rel="noopener">«Bot Service Desk», pestaña Pareto</a> (tickets de los últimos 90 días al 12-ago).</span>
       </div>
       <div class="chart">
         <h3>Del runbook a la resolución sin agente</h3>
         <ul class="timeline">
-          <li><time>04-ago</time><div><span class="tag">Runbooks</span>Contraseña Px, calendarios, órdenes no enlazadas y horario de tienda.</div></li>
-          <li><time>12-ago</time><div><span class="tag">Baseline</span>Pareto de 90 días por categoría para decidir qué automatizar.</div></li>
-          <li><time>17-ago</time><div><span class="tag">Bot</span>Encendido en #peticiones_ti. Solo responde con lo que está en el runbook; si no, escala a Service Desk.</div></li>
-          <li><time>02-sep</time><div><span class="tag">Sin agente</span>Primera asignación de caja con acciones reales en Odoo (CL): 50 s, ticket cerrado.</div></li>
-          <li><time>09-sep</time><div><span class="tag">Reúso</span>El mismo flujo, activo en B&amp;F MX.</div></li>
-          <li><time>22-sep</time><div><span class="tag">Central</span>Prototipo de la Central de Tickets; lanzada el 05-oct (Tech y Mantenimiento).</div></li>
+          <li><time>04-ago</time><div><span class="tag">Runbooks</span>Contraseña Px, calendarios, órdenes no enlazadas y horario de tienda.<div class="refs"><a class="ref" href="https://benandfrank.slack.com/archives/C0AC6H27C57/p1785882088513669" target="_blank" rel="noopener">Runbooks ↗</a></div></div></li>
+          <li><time>12-ago</time><div><span class="tag">Baseline</span>Pareto de 90 días por categoría para decidir qué automatizar.<div class="refs"><a class="ref" href="https://benandfrank.slack.com/archives/C0AC6H27C57/p1786568830015059" target="_blank" rel="noopener">Mensaje ↗</a><a class="ref" href="https://docs.google.com/spreadsheets/d/1b67YFLgKFHVX22FVPSZRsm_xExd1UekPhrDg6tHoX-I/edit#gid=2004704199" target="_blank" rel="noopener">Pareto ↗</a></div></div></li>
+          <li><time>17-ago</time><div><span class="tag">Bot</span>Encendido en #peticiones_ti. Solo responde con lo que está en el runbook; si no, escala a Service Desk.<div class="refs"><a class="ref" href="https://benandfrank.slack.com/archives/C0AC6H27C57/p1786980157838619" target="_blank" rel="noopener">Encendido ↗</a><a class="ref" href="https://benandfrank.slack.com/archives/C0AC6H27C57/p1786461052757589" target="_blank" rel="noopener">Reglas del bot ↗</a></div></div></li>
+          <li><time>02-sep</time><div><span class="tag">Sin agente</span>Primera asignación de caja con acciones reales en Odoo (CL): 50 s, ticket cerrado.<div class="refs"><a class="ref" href="https://benandfrank.slack.com/archives/C0AC6H27C57/p1788361727050279" target="_blank" rel="noopener">Resultado ↗</a></div></div></li>
+          <li><time>09-sep</time><div><span class="tag">Reúso</span>El mismo flujo, activo en B&amp;F MX y anunciado a tiendas.<div class="refs"><a class="ref" href="https://benandfrank.slack.com/archives/C0AC6H27C57/p1788967499708889" target="_blank" rel="noopener">Activación MX ↗</a><a class="ref" href="https://benandfrank.slack.com/archives/CAKQ0KBCH/p1788982902929689" target="_blank" rel="noopener">Aviso a tiendas ↗</a></div></div></li>
+          <li><time>22-sep</time><div><span class="tag">Central</span>Prototipo de la Central de Tickets; lanzada el 05-oct (Tech y Mantenimiento).<div class="refs"><a class="ref" href="https://guillermovillanueva-source.github.io/Single-one-touch/" target="_blank" rel="noopener">Prototipo ↗</a><a class="ref" href="https://benandfrank.slack.com/archives/C06MJ9NCCD6/p1791241210080089" target="_blank" rel="noopener">Lanzamiento ↗</a></div></div></li>
         </ul>
       </div>
     </div>
-    <p class="note">Pendiente para cerrar el comentario del líder: % de tickets de Caja resueltos sin agente contra el total de Mesa. Incidencia registrada: el 22-sep el bot asignó una caja de otra tienda; se corrigió el 09-oct.</p>
+    <p class="note">Pendiente para cerrar el comentario del líder: % de tickets de Caja resueltos sin agente contra el total de Mesa. Incidencias: el 22-sep se reportó una caja mal asignada en BV, donde el bot no estaba activo (<a href="https://benandfrank.slack.com/archives/C07SGH21LNL/p1790102306711069" target="_blank" rel="noopener">hilo</a>); el 09-oct se corrigieron dos casos reales: cajas con sesión abierta y el mapeo de Galerías Toluca (<a href="https://benandfrank.slack.com/archives/C0AC6H27C57/p1791567418545709?thread_ts=1791565050.842219&amp;cid=C0AC6H27C57" target="_blank" rel="noopener">fix</a>).</p>
     <div class="evid" data-meta="7"></div>
   </section>
 
   <footer>
-    <span>Fuentes: Slack (#hypercare_tech_galileo, #bot-service-desk, #operaciones-galileo, #pool-engineering, #customer-journey), slides Cierre Q3, Sheet «Histórico de tickets – Service Desk» y hoja «Bot Service Desk».</span>
-    <span>Tablero: <a href="https://benandfrank.github.io/Tendencias-Tickets/" target="_blank" rel="noopener">Tendencias de tickets</a></span>
+    <span>Fuentes: <a href="https://benandfrank.slack.com/archives/C065RGQNX9U" target="_blank" rel="noopener">#hypercare_tech_galileo</a> · <a href="https://benandfrank.slack.com/archives/C0AC6H27C57" target="_blank" rel="noopener">#bot-service-desk</a> · <a href="https://benandfrank.slack.com/archives/C07SGH21LNL" target="_blank" rel="noopener">#operaciones-galileo</a> · <a href="https://benandfrank.slack.com/archives/C0BN5LAC19C" target="_blank" rel="noopener">#pool-engineering</a> · <a href="https://benandfrank.slack.com/archives/C0AAJ7GK023" target="_blank" rel="noopener">#customer-journey</a> · <a href="https://docs.google.com/presentation/d/1prF_aJt29ZiJ6UoOOmQL38RakZoBY6M8iov3GnMHwIo/edit" target="_blank" rel="noopener">Slides Cierre Q3</a> · <a href="https://docs.google.com/spreadsheets/d/1TDxOLtDCTH-uE3OJAeWDEUbnyM5j28vMwYWNhqinqt4/edit" target="_blank" rel="noopener">Histórico de tickets</a> · <a href="https://docs.google.com/spreadsheets/d/1b67YFLgKFHVX22FVPSZRsm_xExd1UekPhrDg6tHoX-I/edit" target="_blank" rel="noopener">Bot Service Desk</a> · <a href="https://benandfrank.github.io/Tendencias-Tickets/" target="_blank" rel="noopener">Tablero Tendencias de tickets</a></span>
+    <span>Los links abren en Slack, Google y GitHub de Ben &amp; Frank: se ven con una cuenta de la empresa que tenga acceso a esos canales y documentos.</span>
   </footer>
 </div>
 
