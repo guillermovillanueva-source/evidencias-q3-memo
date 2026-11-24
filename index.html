@@ -102,6 +102,16 @@ a.ref{font-family:var(--font-mono);font-size:11.5px;font-weight:500;color:var(--
 a.ref:hover{border-bottom-color:var(--accent)}
 .refs{display:flex;flex-wrap:wrap;gap:4px 12px;margin-top:4px}
 .kpi .refs{margin-top:6px}
+.calc{background:var(--surface);border:1px solid var(--line);border-radius:10px;display:grid;gap:0;min-width:0;overflow:hidden}
+.calc .calc-head{padding:12px 16px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:6px 16px;border-bottom:1px solid var(--line)}
+.calc table{font-size:13.5px}
+.calc td.r,.calc th.r{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.calc .formula{padding:12px 16px;border-top:1px solid var(--line);background:var(--bg);font-family:var(--font-mono);font-size:13px;overflow-x:auto;white-space:nowrap}
+.calc .why{padding:12px 16px;border-top:1px solid var(--line);display:grid;gap:6px;font-size:13.5px}
+.calc .why p{max-width:none}
+.total{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 16px;padding:14px 16px;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+.total b{font-family:var(--font-display);font-size:28px}
+.total .mono{font-size:13px;color:var(--muted);overflow-wrap:anywhere}
 
 /* Evidencias cargadas */
 .evid{display:grid;gap:12px}
@@ -163,6 +173,12 @@ footer{font-size:12.5px;color:var(--muted);border-top:1px solid var(--line);padd
     </a>
   </div>
 
+  <div class="total" aria-label="Resultado ponderado">
+    <span class="eyebrow">Resultado ponderado Q3</span>
+    <b class="num">89.25</b><span class="pill ok">Cumple</span>
+    <span class="mono">Σ (N × peso) / 100 = (100 × 40 + 80 × 35 + 85 × 25) / 100 = (4,000 + 2,800 + 2,125) / 100 = 89.25</span>
+  </div>
+
   <!-- ===================== META 5 ===================== -->
   <section class="meta-sec" id="meta-5">
     <div class="sec-head">
@@ -172,6 +188,23 @@ footer{font-size:12.5px;color:var(--muted);border-top:1px solid var(--line);padd
     <div class="target">
       <div class="box"><span class="eyebrow">Objetivo (columna F)</span><p>100% con RCA/owner; ≥30% menos recurrencia.</p></div>
       <div class="box leader"><span class="eyebrow">Comentario del líder (columna O)</span><p>Incidentes 779→653 agosto a septiembre (−16%). No prueba reducción de las causas seleccionadas.</p></div>
+    </div>
+    <div class="calc">
+      <div class="calc-head"><h3>Cómo llegué a N = 100</h3><span class="eyebrow">Meta compuesta · 2 componentes</span></div>
+      <div class="tbl" style="border:0;border-radius:0">
+        <table>
+          <thead><tr><th>Componente</th><th>Objetivo</th><th>Resultado Q3</th><th class="r">Logro</th></tr></thead>
+          <tbody>
+            <tr><td>A · Cobertura de RCA/owner en P1</td><td>100%</td><td>2 de 2 P1 con ticket y RCA</td><td class="r">2 / 2 = <b>100%</b></td></tr>
+            <tr><td>B · Reducción de recurrencia de la causa seleccionada (disponibilidad de Odoo)</td><td>≥30%</td><td>Cédulas 5 en julio → 0 en septiembre: (5 − 0) / 5 = 100% de reducción</td><td class="r">100 / 30 = 333% → tope <b>120%</b></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="formula">N = mín(A, B) = mín(100, 120) = 100</div>
+      <div class="why">
+        <p><b>Por qué el mínimo:</b> la meta tiene dos condiciones y no hay una regla acordada para combinarlas. Uso la más conservadora: se cumple al 100% cuando las dos condiciones se cumplen. Si se acuerda promediarlas, N = (100 + 120) / 2 = 110.</p>
+        <p><b>Por qué la causa es disponibilidad de Odoo:</b> las 5 cédulas de julio y los dos P1 son caídas o lentitud de Odoo; la causa raíz de PgDog se corrigió el 31-ago y no hubo cédulas en agosto ni en septiembre.</p>
+      </div>
     </div>
     <div class="kpis">
       <div class="kpi"><b class="num">2 / 2</b><span>P1 de Q3 con ticket y RCA (100%)</span><div class="refs"><a class="ref" href="https://benandfrank.slack.com/archives/C065RGQNX9U/p1783009054261619" target="_blank" rel="noopener">P1 02-jul ↗</a><a class="ref" href="https://benandfrank.slack.com/archives/C065RGQNX9U/p1784597563070079" target="_blank" rel="noopener">P1 20-jul ↗</a></div></div>
@@ -222,6 +255,23 @@ footer{font-size:12.5px;color:var(--muted);border-top:1px solid var(--line);padd
       <div class="box"><span class="eyebrow">Objetivo (columna F)</span><p>Baseline conjunto y reducción verificable.</p></div>
       <div class="box leader"><span class="eyebrow">Comentario del líder (columna O)</span><p>Dos slides reportan 91 y 59 escalaciones de sep. Conciliar población; ruteo ≠ prevención.</p></div>
     </div>
+    <div class="calc">
+      <div class="calc-head"><h3>Cómo llegué a N = 80</h3><span class="eyebrow">Meta compuesta · 2 componentes al 50%</span></div>
+      <div class="tbl" style="border:0;border-radius:0">
+        <table>
+          <thead><tr><th>Componente</th><th>Objetivo</th><th>Resultado Q3</th><th class="r">Logro</th><th class="r">Peso</th></tr></thead>
+          <tbody>
+            <tr><td>A · Reducción verificable</td><td>Reducción medible</td><td>Incidentes 1,393 → 982: (1,393 − 982) / 1,393 = −29.5%. Tickets escalados / total: 7.90% → 2.63%</td><td class="r"><b>100%</b></td><td class="r">50%</td></tr>
+            <tr><td>B · Baseline conjunto con Quality</td><td>Baseline acordado y medido</td><td>Acordado con QA el 28-sep (qué datos lleva cada escalado); todavía sin una medición conjunta en Q3</td><td class="r"><b>60%</b></td><td class="r">50%</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="formula">N = 0.5 × A + 0.5 × B = 0.5 × 100 + 0.5 × 60 = 50 + 30 = 80</div>
+      <div class="why">
+        <p><b>Por qué A = 100%:</b> la columna F no pone un porcentaje mínimo, solo pide una reducción verificable. Hay dos reducciones medidas con fuente: incidentes −29.5% aunque el total subió 12% (2,310 → 2,590), y tasa de escalamiento −5.3 puntos.</p>
+        <p><b>Por qué B = 60%:</b> la definición del baseline (qué se mide y cómo) es lo mínimo para cumplir parcialmente; falta el segundo paso, medirlo junto con Quality. 60 es el umbral de «cumple parcial» en la escala Galileo.</p>
+      </div>
+    </div>
     <div class="kpis">
       <div class="kpi"><b class="num down">−30%</b><span>Incidentes, jul → sep (1,393 → 982)</span><div class="refs"><a class="ref" href="https://benandfrank.github.io/Tendencias-Tickets/#rango=ytd&amp;gran=mes&amp;clase=Incidente" target="_blank" rel="noopener">Tablero · Incidentes ↗</a></div></div>
       <div class="kpi"><b class="num up">+77%</b><span>Requerimientos, jul → sep (878 → 1,553)</span><div class="refs"><a class="ref" href="https://benandfrank.github.io/Tendencias-Tickets/#rango=ytd&amp;gran=mes&amp;clase=Requerimiento" target="_blank" rel="noopener">Tablero · Requerimientos ↗</a></div></div>
@@ -271,6 +321,24 @@ footer{font-size:12.5px;color:var(--muted);border-top:1px solid var(--line);padd
     <div class="target">
       <div class="box"><span class="eyebrow">Objetivo (columna F)</span><p>Central + bot y tres casos reutilizables con baseline.</p></div>
       <div class="box leader"><span class="eyebrow">Comentario del líder (columna O)</span><p>Bot en cuatro categorías en agosto; &gt;60% de tickets de Caja atendidos, no de toda Mesa ni prueba de resolución autónoma.</p></div>
+    </div>
+    <div class="calc">
+      <div class="calc-head"><h3>Cómo llegué a N = 85</h3><span class="eyebrow">Proyecto · 3 entregables con el mismo peso</span></div>
+      <div class="tbl" style="border:0;border-radius:0">
+        <table>
+          <thead><tr><th>Entregable</th><th>Esperado</th><th>Resultado Q3</th><th class="r">Logro</th></tr></thead>
+          <tbody>
+            <tr><td>A · Bot</td><td>Bot operando con resolución autónoma</td><td>Encendido 17-ago; resolvió solo una asignación de caja el 02-sep (50 s, ticket cerrado) y quedó activo en MX el 09-sep</td><td class="r"><b>100%</b></td></tr>
+            <tr><td>B · Tres casos reutilizables con baseline</td><td>3 casos</td><td>Asignar caja (296/mes), Cerrar consultorios (64/mes) y Fondo de pantalla (12/mes), con runbook y Pareto</td><td class="r">3 / 3 = <b>100%</b></td></tr>
+            <tr><td>C · Central de Tickets</td><td>Central operando</td><td>Construida y probada en Q3 (prototipo 22-sep, repo 01-oct); lanzada el 05-oct, fuera del trimestre</td><td class="r"><b>55%</b></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="formula">N = (A + B + C) / 3 = (100 + 100 + 55) / 3 = 255 / 3 = 85</div>
+      <div class="why">
+        <p><b>Por qué C = 55%:</b> el trabajo de construcción quedó hecho dentro de Q3, pero la Central no estuvo en uso por las tiendas antes del 30-sep. Le doy algo más de la mitad porque salió a producción 5 días después del cierre, ya construida.</p>
+        <p><b>Por qué no más de 85:</b> falta medir el % de tickets de Caja resueltos sin agente contra el total de Mesa, que es lo que pide el comentario del líder.</p>
+      </div>
     </div>
     <div class="kpis">
       <div class="kpi"><b class="num">3 / 3</b><span>Casos reutilizables con baseline y runbook</span><div class="refs"><a class="ref" href="https://docs.google.com/document/d/1BRPO_jeBFlzZvkrelag2lLvFRoEQTzXdH3XbRv3Cpg4/edit" target="_blank" rel="noopener">Caja ↗</a><a class="ref" href="https://benandfrank.slack.com/archives/C0AC6H27C57/p1787777275975069" target="_blank" rel="noopener">Consultorios ↗</a><a class="ref" href="https://docs.google.com/document/d/1A81XVaAelUExuU8uuqDh_r2rf2cS7aZFEhocAjV6qUk/edit" target="_blank" rel="noopener">Fondo ↗</a></div></div>
